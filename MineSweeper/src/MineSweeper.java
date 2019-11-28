@@ -23,8 +23,8 @@ import java.util.Random;
 
 public class MineSweeper extends JFrame {
 	public MineSweeper() {
-		GamePanel chatPanel = new GamePanel();
-		add(GamePanel);
+		GamePanel gamePanel = new GamePanel();
+		add(gamePanel);
 	}
 
 	public static class GamePanel extends JPanel implements ActionListener {
