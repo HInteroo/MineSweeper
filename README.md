@@ -51,4 +51,11 @@ About MineSweeper Wikipedia and how to play via Wikipedia (https://en.wikipedia.
  - I setOpaque(true) to allow the setBackground(Color.White) to take place. 
  - I give each Tiles a specific name, sort of like an ID (TilesBtns[xaxis][yaxis].setName("("+xaxis+","+yaxis+")")) reason behind it is to know which buttons were clicked via the actionPerformed(ActionEvent e) method. The names of each buttons are their coordinates like so: "(0,0)"...
  
-					TilePanel.add(TilesBtns[xaxis][yaxis],BorderLayout.CENTER);
+#### CreateMines();
+ - I create the 14 mines here by putting the coordinates into an arrayList called Coords as Strings. Coords is needed to determine where i would be setting the Mine icon to which Tiles
+ 
+#### CreateNumTiles();
+
+ - Looks on the Tiles sorrounding the mines, there would atleast be 8 TIles sorrounding a mine therefore 8 if-statements are needed in case the -1< x-coordinates < 10 or -1 < y-coordinate < 10. 
+ 
+ - Calls checkMines(int xCoord, int yCoord) to store in the number of mines a tile is sorrounding with by using HashMap/Map. Since Hashmaps's Keys are unique, it saves me the trouble of repeated Xcoordinates and yCoordinates
