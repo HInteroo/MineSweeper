@@ -23,11 +23,11 @@ import java.util.Random;
 
 public class MineSweeper extends JFrame {
 	public MineSweeper() {
-		ChatPanel chatPanel = new ChatPanel();
-		add(chatPanel);
+		GamePanel chatPanel = new GamePanel();
+		add(GamePanel);
 	}
 
-	public static class ChatPanel extends JPanel implements ActionListener {
+	public static class GamePanel extends JPanel implements ActionListener {
 		Map <Integer, Integer> secondMap = new HashMap <Integer, Integer>();
 		Map<Integer, Map<Integer, Integer>> tilesAroundMines = new HashMap<Integer, Map<Integer, Integer>>();
 		 int i = 0;
@@ -43,7 +43,7 @@ public class MineSweeper extends JFrame {
 		JPanel TilePanel = new JPanel();
 		private ArrayList<String> Coords;
 		
-		public ChatPanel() {
+		public GamePanel() {
 			setLayout(new BorderLayout());
 			
 			mine = new ImageIcon(getClass().getResource("Mine.png"));
