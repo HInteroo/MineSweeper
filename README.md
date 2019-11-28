@@ -44,11 +44,11 @@ About MineSweeper Wikipedia and how to play via Wikipedia (https://en.wikipedia.
  - y = Rows
  - Side-Note : Should be fixed meaning X and Y should be nothing but 9. Reason why it's not is because i'd like to give it a "Difficulty" button allowing the user to change the difficulty. The more difficult the more mines, Columns and Rows there is.
  - TilesPanel is defined here and is added toe the main Panel.
- -	I set the preferred size of the buttons here: Dimension(40, 40));
-	- I add ActionListener(this) to all the Tile Buttons here.
-	- I setMargin( new Insets(5, 5, 5, 5) ) because i wanted the font of the text inside the buttons to not be "...".
-	- i setBackground(Color.white) to all Tile Buttons here.
-	-	I setOpaque(true) to allow the setBackground(Color.White) to take place. 
-	- I give each Tiles a specific name, sort of like an ID (TilesBtns[xaxis][yaxis].setName("("+xaxis+","+yaxis+")")) reason behind it is to know which buttons were clicked via the actionPerformed(ActionEvent e) method. The names of each buttons are their coordinates like so: "(0,0)"...
+ - I set the preferred size of the buttons here: Dimension(40, 40));
+ - I add ActionListener(this) to all the Tile Buttons here.
+ - I setMargin( new Insets(5, 5, 5, 5) ) because i wanted the font of the text inside the buttons to not be "...".
+ - i setBackground(Color.white) to all Tile Buttons here.
+ - I setOpaque(true) to allow the setBackground(Color.White) to take place. 
+ - I give each Tiles a specific name, sort of like an ID (TilesBtns[xaxis][yaxis].setName("("+xaxis+","+yaxis+")")) reason behind it is to know which buttons were clicked via the actionPerformed(ActionEvent e) method. The names of each buttons are their coordinates like so: "(0,0)"...
  
 					TilePanel.add(TilesBtns[xaxis][yaxis],BorderLayout.CENTER);
