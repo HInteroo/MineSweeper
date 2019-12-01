@@ -28,58 +28,48 @@ public class MineSweeper extends JFrame {
 	}
 
 	public static class GamePanel extends JPanel implements ActionListener {
-		Map <Integer, Integer> secondMap = new HashMap <Integer, Integer>();
-		Map<Integer, Map<Integer, Integer>> tilesAroundMines = new HashMap<Integer, Map<Integer, Integer>>();
-		 int i = 0;
-
-		private String[] jbtnNames = { "Beginner","Intermediate","Expert", "Quit"};
-		private JButton[] jbtns = new JButton[jbtnNames.length];
-		private JButton[][] TilesBtns;
-		private final int BTN_INDEX_Quit = 3;
-		boolean done = false;
-		
-		ImageIcon mine;
-		String[][] Coordinates;
-		JPanel TilePanel = new JPanel();
-		private ArrayList<String> Coords;
-		
-		public GamePanel() {
+		private Map<Integer, Map<Integer, Integer>> tilesAroundMines = new HashMap<Integer, Map<Integer, Integer>>();
+		private Map <Integer, Integer> secondMap = new HashMap <Integer, Integer>();
+		private JButton[] jbtns = new JButton[1];			//Array that only contains the Quit Button. Might give it a difficulty button soon (Easy, Hard, Super Duper Hard)
+		private JButton[][] TilesBtns; 						//TilesBtns: are the buttons that contains clues, empty tiles or mines.
+		private ImageIcon mine; 							//Icon image for mines
+		private ArrayList<String> Coords;					//ArrayList, in it contains the name of each mines in string (14 mines) like {"(1,1)","(2,1)","(9,9)",...}
+		private JPanel TilePanel = new JPanel();			//A panel that contains the JButtons of each tiles
+		private boolean blankTile = false;
+		private int[][] eightNeighbor = new int[][]{{-1, -1}, {0, -1}, {1, -1}, {1, 0}, 
+    		{1, 1}, {0, 1}, {-1, 1}, {-1, 0}};
+//		private int[][] eightNeighbor = new int[][]{{-1,0},{1,0},{0,1},{0,-1}};
+        		
+		public GamePanel() {				//Creating the main Panel that holds both TilePanel and QuitBtnPanel
 			setLayout(new BorderLayout());
 			
 			mine = new ImageIcon(getClass().getResource("Mine.png"));
 			Image image = mine.getImage();
 			Image newimg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-			mine = new ImageIcon(newimg);  // transform it back
+			mine = new ImageIcon(newimg);  												 // transform it back
 			
 			JPanel MainPanel = new JPanel();
 			MainPanel.setLayout(new GridLayout(2, 1));
 		
-			jbtns[BTN_INDEX_Quit] = new JButton(jbtnNames[BTN_INDEX_Quit]);
-			jbtns[BTN_INDEX_Quit].addActionListener(this);
+			jbtns[0] = new JButton("Quit");
+			jbtns[0].addActionListener(this);
+			
 			JPanel QuitBtnPanel = new JPanel();
 			QuitBtnPanel.setLayout(new GridLayout(1, 1));
-			QuitBtnPanel.add(jbtns[BTN_INDEX_Quit],BorderLayout.CENTER);
+			QuitBtnPanel.add(jbtns[0],BorderLayout.CENTER);
 			MainPanel.add(QuitBtnPanel, BorderLayout.SOUTH);
 			add(MainPanel,BorderLayout.SOUTH);
 			
-			CreateTiles(10,10);
-			CreateMines();
-			CreateNumTiles();
+			CreateTiles(10,10); //creates Tiles to TilePanel
+			createMines();  	//Creates the 14 mines 
+			createClues();	    //Creates the Clues surrounding the mines
 		}
 	
-	
-		public void disconnect() {
-			done = true;
-			System.exit(1);
-		}
-		public void NewGame() {
+		public void CreateTiles(int x,int y) {			//Creates the buttons inside TilePanel
+			TilePanel.setLayout(new GridLayout(x,y));	//Setting the layout by 9 columns and 9 rows
+			TilesBtns = new JButton[x][y];				//an arraylist of JButtons
 			
-		}
-		public void CreateTiles(int x,int y) {
-			TilePanel.setLayout(new GridLayout(x,y));
-			TilesBtns = new JButton[x][y];
-			int xaxis=0;
-			for(; xaxis<x; xaxis++){					//(x, y) axis
+			for(int xaxis=0; xaxis<x; xaxis++){
 				for(int yaxis=0; yaxis<y; yaxis++){
 					TilesBtns[xaxis][yaxis] = new JButton("");
 					TilesBtns[xaxis][yaxis].setPreferredSize(new Dimension(40, 40));
@@ -94,7 +84,7 @@ public class MineSweeper extends JFrame {
 			add(TilePanel,BorderLayout.CENTER);
 		}
 		
-		public void CreateMines() {
+		public void createMines() { //Creating 14 mines at different location using random()
 	        final Random r = new Random();
 	        Coords = new ArrayList<String>(0);
 	        do {
@@ -106,9 +96,9 @@ public class MineSweeper extends JFrame {
 	        }while(Coords.size()!=14);
 		}
 		
-		public void checkMines(int xCoord, int yCoord) {
-			if(!Coords.contains("("+xCoord+","+yCoord+")")) {
-			    if (!tilesAroundMines.containsKey(xCoord)) { // if 0 is not in []
+		public void checkSorroundings(int xCoord, int yCoord) {
+			if(!Coords.contains("("+xCoord+","+yCoord+")")) {				//Coords is a map: ((x,y) -> Value) or in map: <X<Y,Value>>
+			    if (!tilesAroundMines.containsKey(xCoord)) { 				//if x isn't repeated, put it inside the map 
 			    	tilesAroundMines.put(xCoord, null);
 			    	if(tilesAroundMines.get(xCoord) == null) {
 				    	secondMap = new HashMap<Integer, Integer>();
@@ -116,7 +106,7 @@ public class MineSweeper extends JFrame {
 				    	tilesAroundMines.put(xCoord, secondMap);
 				    }
 			    }
-			    else { //if it does contains the key
+			    else { 														//if it does contains the key
 			    	if(!tilesAroundMines.get(xCoord).containsKey(yCoord)) { //if 2 is not in [0:{ 0:1, 1:1}]
 				    	tilesAroundMines.get(xCoord).put(yCoord,1);
 				    }
@@ -127,70 +117,75 @@ public class MineSweeper extends JFrame {
 		    }
 		}
 		
-		public void CreateNumTiles() {
+		public void closeGame() {
+			System.exit(1);
+		}
+	
+		public void createClues() {
 
 			int xCoord;
 			int yCoord;
-			
 			for(String i: Coords) {
 				xCoord = Integer.parseInt(i.substring(1, 2));
         		yCoord = Integer.parseInt(i.substring(3, 4));
-
-				if(-1<xCoord-1 && xCoord-1 <10) {
-					checkMines(xCoord-1,yCoord);
-				}
-				if(-1<xCoord+1 && xCoord+1 <10) {
-					checkMines(xCoord+1,yCoord);
-				}
-				if(-1<yCoord+1 && yCoord+1 <10 ) {
-					checkMines(xCoord,yCoord+1);
-				}
-				if(-1<yCoord-1 && yCoord-1 <10) {
-					checkMines(xCoord,yCoord-1);
-				}
-				if(-1<xCoord+1 && xCoord+1 <10 && -1<yCoord+1 && yCoord+1 <10) { //(7,6)
-					checkMines(xCoord+1,yCoord+1);
-
-				}
-				if(-1<xCoord+1 && xCoord+1 <10 && -1<yCoord-1 && yCoord-1 <10) { 
-					checkMines(xCoord+1,yCoord-1);
-
-				}
-				if(-1<xCoord-1 && xCoord-1 <10 && -1<yCoord+1 && yCoord+1 <10) {
-					checkMines(xCoord-1,yCoord+1);
-
-				}
-				if(-1<xCoord-1 && xCoord-1 <10 && -1<yCoord-1 && yCoord-1 <10) {
-					checkMines(xCoord-1,yCoord-1);
-
-				}
+            	for (int index = 0; index < eightNeighbor.length; index++) { 
+            		if(-1<xCoord+eightNeighbor[index][0] && xCoord+eightNeighbor[index][0]<10 
+            				&& yCoord+eightNeighbor[index][1] <10 && -1< yCoord+eightNeighbor[index][1]) {
+    					checkSorroundings(xCoord +eightNeighbor[index][0],yCoord+eightNeighbor[index][1]);
+            		}
+            	}
 			}
 		}
 		public void checkClickedTiles(int x,int y) {
-			if(Coords.contains("("+x+","+y+")")) {
-				System.out.println("Mine!");
-				for (String MinesCoords: Coords) {
-					TilesBtns[Integer.parseInt(MinesCoords.substring(1, 2))]
-	        				[Integer.parseInt(MinesCoords.substring(3, 4))].setIcon(mine);
+			if(Coords.contains("("+x+","+y+")") == false && (tilesAroundMines.containsKey(x) 
+					&& tilesAroundMines.get(x).containsKey(y) == false)){
+    			TilesBtns[x][y].setBorderPainted(false);
+				if (TilesBtns[x][y].isEnabled()) {
+					blankTile = true;
+
+	            	for (int index = 0; index < eightNeighbor.length; index++) { 
+	            		if(-1<x+eightNeighbor[index][0] && x+eightNeighbor[index][0]<10 
+	            				&& y+eightNeighbor[index][1] <10 && -1< y+eightNeighbor[index][1]) {
+	            			checkClickedTiles((x +eightNeighbor[index][0]),(y+eightNeighbor[index][1]));
+	            		}
+	        			TilesBtns[x][y].setEnabled(false);
+	            	}
+					blankTile = true;
+
 				}
+//				blankTile = false;
+
+				System.out.println(x +" , "+y);
+
 			}
-			else { 
-					if(tilesAroundMines.containsKey(x)) {
-						if(tilesAroundMines.get(x).containsKey(y)){
-						TilesBtns[x][y].setText(""+tilesAroundMines.get(x).get(y)+"");
-						TilesBtns[x][y].setFont(new Font("Arial", Font.BOLD, 15));
-						TilesBtns[x][y].setBorderPainted(false);
-						}
-					}
+			else {
+				if(tilesAroundMines.containsKey(x) && tilesAroundMines.get(x).containsKey(y) && blankTile == false) { 
+					//if it has a mine around Tile (x,y);
+        			System.out.println(3);
+
+					TilesBtns[x][y].setText(""+tilesAroundMines.get(x).get(y)+"");
+					TilesBtns[x][y].setFont(new Font("Arial", Font.BOLD, 15));
 					TilesBtns[x][y].setBorderPainted(false);
+				
+				}
+				
+				else if(Coords.contains("("+x+","+y+")")) {	//if its a mine:
+						System.out.println("Mine!");
+						for (String MinesCoords: Coords) {
+							TilesBtns[Integer.parseInt(MinesCoords.substring(1, 2))]
+			        				[Integer.parseInt(MinesCoords.substring(3, 4))].setIcon(mine);
+						}
+						TilesBtns[x][y].setBorderPainted(false);
+						
+					}
 			}
 		}
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btnClicked = (JButton) e.getSource();
-			if (btnClicked.equals(jbtns[BTN_INDEX_Quit])) {
-				disconnect();
+			if (btnClicked.equals(jbtns[0])) {
+				closeGame();
 			}
 			else {
 				String name = btnClicked.getName();
