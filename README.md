@@ -13,14 +13,9 @@ About MineSweeper Wikipedia and how to play via Wikipedia (https://en.wikipedia.
 
 #### NewGame();
 			
- - Not done yet (11/28/19)
  - Would like to give it a New Game button allowing the user to restart the game with different tiles
-
-#### Checking for non-mines and non-clue tiles
-
- - just like a regular MineSweeper game, if a empty tile is clicked on and if its sorrounded by empty tiles than these tiles are all flipped in a sense that it lets the user/player know that they are all safe tiles.
+ - Stopping users from clicking on buttons after a gameover
  
-
 # Description of each Methods:
 
 #### MineSweeper();
