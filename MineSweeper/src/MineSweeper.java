@@ -153,9 +153,10 @@ public class MineSweeper extends JFrame {
 		public void GameOver() {
 			for(ArrayList<Integer> i: mineArray.getArray()) {
 				TilesBtns[i.get(0)][i.get(1)].setIcon(mine);
+				TilesBtns[i.get(0)][i.get(1)].setDisabledIcon(mine);
 				TilesBtns[i.get(0)][i.get(1)].setBorderPainted(false);
 			}
-//			buttonSwitch(false);
+			buttonSwitch(false);
 		}
 		
 		public void buttonSwitch(boolean onoff) {
