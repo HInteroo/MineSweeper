@@ -69,7 +69,9 @@ public class MineSweeper extends JFrame {
 			TilesBtns = new JButton[x][y];				//an arraylist of JButtons
 			xTilesLength = TilesBtns.length;
 			yTilesLength = TilesBtns[0].length;
-			System.out.println(1);
+			System.out.println(xTilesLength);
+
+			System.out.println(yTilesLength);
 			for(int xaxis=0; xaxis<x; xaxis++){
 				for(int yaxis=0; yaxis<y; yaxis++){
 					TilesBtns[xaxis][yaxis] = new JButton("");
@@ -79,9 +81,6 @@ public class MineSweeper extends JFrame {
 					TilesBtns[xaxis][yaxis].setBackground(Color.white);
 					TilesBtns[xaxis][yaxis].setOpaque(true);
 					TilesBtns[xaxis][yaxis].setName("("+xaxis+","+yaxis+")");
-					if(!TilesBtns[xaxis][yaxis].isEnabled()) {
-						TilesBtns[xaxis][yaxis].setEnabled(true);
-					}
 					TilePanel.add(TilesBtns[xaxis][yaxis],BorderLayout.CENTER);
 					blankArray.put(xaxis, yaxis);
 				}
@@ -104,8 +103,8 @@ public class MineSweeper extends JFrame {
 
 			for(ArrayList<Integer> i: mineArray.getArray()) {
             	for (int index = 0; index < eightNeighbors.length; index++) { 
-            		if(-1<i.get(0)+eightNeighbors[index][0] && i.get(0)+eightNeighbors[index][0]<13 
-            				&& i.get(1)+eightNeighbors[index][1] <13 && -1< i.get(1)+eightNeighbors[index][1]) {
+            		if(-1<i.get(0)+eightNeighbors[index][0] && i.get(0)+eightNeighbors[index][0]<yTilesLength 
+            				&& i.get(1)+eightNeighbors[index][1] <yTilesLength && -1< i.get(1)+eightNeighbors[index][1]) {
             			if(!mineArray.contains(i.get(0) +eightNeighbors[index][0],i.get(1)+eightNeighbors[index][1])) {
             				int xaxis = i.get(0) +eightNeighbors[index][0];
             				int yaxis = i.get(1)+eightNeighbors[index][1];
@@ -121,7 +120,6 @@ public class MineSweeper extends JFrame {
 		
 		public void checkClickedTiles(int x,int y) {
 			if(blankArray.contains(x, y) ){
-//				isBlankTile = true;
 				System.out.println("its a blank");
 				if (TilesBtns[x][y].isEnabled()) {
 	            	for (int index = 0; index < eightNeighbors.length; index++) { 
@@ -133,7 +131,6 @@ public class MineSweeper extends JFrame {
 	            			checkClickedTiles(xaxis,yaxis);
 	            		}
 	        			TilesBtns[x][y].setEnabled(false);
-//	        			isBlankTile = false;
 	            	}
 				}
 			}
@@ -158,7 +155,7 @@ public class MineSweeper extends JFrame {
 				TilesBtns[i.get(0)][i.get(1)].setIcon(mine);
 				TilesBtns[i.get(0)][i.get(1)].setBorderPainted(false);
 			}
-			buttonSwitch(false);
+//			buttonSwitch(false);
 		}
 		
 		public void buttonSwitch(boolean onoff) {
